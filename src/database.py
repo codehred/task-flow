@@ -12,7 +12,7 @@ def get_connection():
 
 
 def crear_tablas():
-    conn.get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     # Tabla proyectos
@@ -84,6 +84,54 @@ class DBManager:
         ]
         return proyectos
 
+    def obtener_tareas(self, estado=None):
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        sql = "SELECT * FROM tareas"
+        params = []
+
+        if estado:
+            sql += " WHERE estado = ?"
+            params.append(estado)
+
+        sql += " ORDER BY fecha_limite ASC"
+
+        cursor.execute(sql, params)
+        filas = cursor.fetchall()
+        conn.close()
+
+        tareas = []
+        for fila in filas:
+            t = Tarea(
+                titulo=fila['titulo'],
+                fecha_limite=fila['fecha_limite'],
+                prioridad=fila['prioridad'],
+                proyecto_id=fila['proyecto_id'],
+                estado=fila['estado'],
+                descripcion=fila['descripcion'],
+                fecha_creacion=fila['fecha_creacion'],
+                id=fila['id']
+            )
+            tareas.append(t)
+        return tareas
+
+    def actualizar_tarea_estado(self, tarea_id: int, nuevo_estado: str) -> bool:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE tareas
+            SET estado=?
+            WHERE id=?
+        """, (nuevo_estado, tarea_id))
+
+        updated = cursor.rowcount > 0
+
+        conn.commit()
+        conn.close()
+        return updated
+
 
 if __name__ == '__main__':
     # Bloque de prueba para la clase
@@ -92,17 +140,42 @@ if __name__ == '__main__':
         print(f"Base de datos {DATABASE_NAME} eliminada.")
 
     crear_tablas()
-    print(f"Base de datos {DATABASE_NAME} y tablas inicializadas correctamente.")
-    
+    print(
+        f"Base de datos {DATABASE_NAME} y tablas inicializadas correctamente.")
+
     # Prueba del CRUD (CREATE)
     manager = DBManager()
     tarea_prueba = Tarea(
-        titulo="Completar Ejercicio de CRUD", 
-        fecha_limite="2025-10-30", 
-        prioridad="Alta", 
+        titulo="Completar Ejercicio de CRUD",
+        fecha_limite="2025-10-30",
+        prioridad="Alta",
         proyecto_id=0,
         descripcion="Implementar el módulo database.py"
     )
-    
+
     tarea_creada = manager.crear_tarea(tarea_prueba)
     print(f"Tarea creada y ID asignado: {tarea_creada.id}")
+
+    # src/database.py (dentro de la clase DBManager)
+
+    # --- Tareas (CRUD - UPDATE) ---
+    def actualizar_tarea_estado(self, tarea_id: int, nuevo_estado: str) -> bool:
+        """
+        Actualiza el estado de una tarea específica en la DB.
+        """
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        # Sentencia SQL para actualizar UN solo campo de UN solo registro (UPDATE)
+        cursor.execute("""
+            UPDATE tareas 
+            SET estado=?
+            WHERE id=?
+        """, (nuevo_estado, tarea_id))
+        
+        # Validamos si se actualizó algún registro
+        updated = cursor.rowcount > 0
+        
+        conn.commit()
+        conn.close()
+        return updated
