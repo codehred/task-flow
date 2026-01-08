@@ -16,16 +16,16 @@ class Proyecto:
 
     @property
     def id(self):
-        """Getter para acceder al ID de forma limpia (proyecto.id)."""
+        #"""Getter para acceder al ID de forma limpia (proyecto.id)."""
         return self._id
 
     @id.setter
     def id(self, valor):
-        """Setter necesario para que la DB pueda asignar el ID después de la creación."""
+        #"""Setter necesario para que la DB pueda asignar el ID después de la creación."""
         self._id = valor
 
     def to_dict(self):
-        """Convierte el objeto a un diccionario, útil para Flask y la DB."""
+       # """Convierte el objeto a un diccionario, útil para Flask y la DB."""
         return {
             'id': self._id,
             'nombre': self._nombre,
@@ -84,3 +84,10 @@ class Tarea:
             'estado': self._estado,
             'proyecto_id': self._proyecto_id
         }
+    def actualizar_datos(self, titulo, descripcion, fecha_limite, prioridad, proyecto_id):
+        """Actualiza los atributos internos del objeto."""
+        self._titulo = titulo
+        self._descripcion = descripcion
+        self._fecha_limite = fecha_limite
+        self._prioridad = prioridad
+        self._proyecto_id = proyecto_id 
