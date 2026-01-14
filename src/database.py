@@ -240,6 +240,47 @@ class DBManager:
             tarea._prioridad, tarea._proyecto_id, tarea._id))
         conn.commit()
         conn.close()  
+    def obtener_proyecto_por_id(self, proyecto_id: int) -> Proyecto:
+       
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM proyectos WHERE id=?", (proyecto_id,))
+        fila = cursor.fetchone()
+        conn.close()
+        
+        if fila:
+            proyecto = Proyecto(
+                nombre=fila['nombre'],
+                descripcion=fila['descripcion'],
+                id=fila['id'],
+                estado=fila['estado']
+            )
+            return proyecto
+        return None
+    def guardar_cambios_proyecto(self, proyecto: Proyecto):
+        
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE proyectos 
+            SET nombre=?, descripcion=?, estado=?
+            WHERE id=?
+        """, (proyecto._nombre, proyecto._descripcion, 
+            proyecto._estado, proyecto._id))
+        conn.commit()
+        conn.close()
+    def eliminar_proyecto(self, proyecto_id: int) -> bool:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM proyectos WHERE id=?", (proyecto_id,))
+
+        deleted = cursor.rowcount > 0
+
+        conn.commit()
+        conn.close()
+        return deleted
 
 
 if __name__ == '__main__':

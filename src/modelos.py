@@ -33,6 +33,11 @@ class Proyecto:
             'fecha_inicio': self._fecha_inicio,
             'estado': self._estado
         }
+    def actualizar_datos(self, nombre, descripcion, estado):
+        """Actualiza los atributos internos del objeto."""
+        self._nombre = nombre
+        self._descripcion = descripcion
+        self._estado = estado
 
 
 class Tarea:
