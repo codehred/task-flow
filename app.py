@@ -19,61 +19,51 @@ def index():
 
 @app.route('/crear', methods=['GET', 'POST'])
 def crear_tarea_web():
+    todos = db_manager.obtener_proyectos()
 
-    proyectos = db_manager.obtener_proyectos()
+    proyectos_validos = [p for p in todos if p._estado == 'Activo' or p._id == 0]
 
     if request.method == 'POST':
         titulo = request.form.get('titulo')
         descripcion = request.form.get('descripcion')
         limite = request.form.get('fecha_limite')
         prioridad = request.form.get('prioridad')
-
         proyecto_id = int(request.form.get('proyecto_id'))
 
         nueva_tarea = Tarea(
-            titulo=titulo,
-            descripcion=descripcion,
-            fecha_limite=limite,
-            prioridad=prioridad,
-            proyecto_id=proyecto_id
+            titulo=request.form.get('titulo'),
+            descripcion=request.form.get('descripcion'),
+            fecha_limite=request.form.get('fecha_limite'),
+            prioridad=request.form.get('prioridad'),
+            proyecto_id=int(request.form.get('proyecto_id'))
         )
-
         db_manager.crear_tarea(nueva_tarea)
-
         return redirect(url_for('index'))
 
-    return render_template('formulario_tarea.html', proyectos=proyectos)
-
+    return render_template('formulario_tarea.html', proyectos=proyectos_validos)
 
 
 
 @app.route('/completar/<int:tarea_id>')
 def completar_tarea(tarea_id):
-    """
-    Ruta que maneja la actualización del estado de la tarea (CRUD Update).
-    <int:tarea_id> es un parámetro dinámico que Flask espera en la URL.
-    """
-    # 1. Llamamos al método UPDATE del DBManager
+    
+   
     db_manager.actualizar_tarea_estado(tarea_id, "Completada")
     
-    # 2. Redirigimos al usuario a la página principal para ver el cambio
+   
     return redirect(url_for('index'))
 
 @app.route('/eliminar/<int:tarea_id>')
 def eliminar_tarea(tarea_id):
-    """
-    Ruta que maneja la eliminación de una tarea (CRUD Delete).
-    <int:tarea_id> es un parámetro dinámico que Flask espera en la URL.
-    """
-    # 1. Llamamos al método DELETE del DBManager
+   
     db_manager.eliminar_tarea(tarea_id)
     
-    # 2. Redirigimos al usuario a la página principal para ver el cambio
+
     return redirect(url_for('index'))
 
 @app.route('/proyecto/nuevo', methods=['GET', 'POST'])
 def crear_proyecto_web():
-    """Ruta para mostrar y procesar el formulario de nuevo proyecto."""
+    
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         descripcion = request.form.get('descripcion')
@@ -104,6 +94,29 @@ def editar_tarea_web(tarea_id):
         return redirect(url_for('index'))
 
     return render_template('formulario_edicion_tarea.html', tarea=tarea, proyectos=proyectos)
+
+@app.route('/proyecto/editar/<int:proyecto_id>', methods=['GET', 'POST'])
+def editar_proyecto_web(proyecto_id):
+    proyecto = db_manager.obtener_proyecto_por_id(proyecto_id)
+
+    if request.method == 'POST':
+        
+        proyecto.actualizar_datos(
+            nombre=request.form.get('nombre'),
+            descripcion=request.form.get('descripcion'),
+            estado=request.form.get('estado')
+        )
+        
+        db_manager.guardar_cambios_proyecto(proyecto)
+        
+        return redirect(url_for('index'))
+
+    return render_template('formulario_edicion_proyecto.html', proyecto=proyecto)
+
+@app.route('/proyecto/eliminar/<int:proyecto_id>')
+def eliminar_proyecto_web(proyecto_id):
+    db_manager.eliminar_proyecto(proyecto_id)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     # Las tablas ya se crean automáticamente en el __init__ de DBManager
