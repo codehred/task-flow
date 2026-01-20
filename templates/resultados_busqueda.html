@@ -7,30 +7,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Crear Nueva Tarea</h1>
+        <h1>➕ Crear Nueva Tarea</h1>
 
         <div class="form-wrapper">
             <form method="POST" action="{{ url_for('crear_tarea_web') }}">
                 <div class="form-group">
-                    <label for="titulo">Título de la Tarea:</label>
-                    <input type="text" id="titulo" name="titulo">
+                    <label for="titulo">📝 Título de la Tarea:</label>
+                    <input type="text" id="titulo" name="titulo" required placeholder="Ej: Revisar propuesta de cliente">
                     <div class="helper-text">Describe brevemente la tarea a realizar</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
+                    <label for="descripcion">📄 Descripción:</label>
                     <textarea id="descripcion" name="descripcion" placeholder="Agrega detalles adicionales sobre la tarea..."></textarea>
-                  
+                    <div class="helper-text">Opcional: Incluye contexto, pasos o requisitos específicos</div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fecha_limite">Fecha Límite:</label>
+                        <label for="fecha_limite">📅 Fecha Límite:</label>
                         <input type="date" id="fecha_limite" name="fecha_limite" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="prioridad">Prioridad:</label>
+                        <label for="prioridad">⚡ Prioridad:</label>
                         <select id="prioridad" name="prioridad" required>
                             <option value="Baja">✓ Baja</option>
                             <option value="Media" selected>⚡ Media</option>
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" class="submit-button">Crear Tarea</button>
+                    <button type="submit" class="submit-button">✨ Crear Tarea</button>
                     <a href="{{ url_for('index') }}" class="back-link">
                         <span>←</span>
                         <span>Volver al Listado</span>

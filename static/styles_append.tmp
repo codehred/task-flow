@@ -1,0 +1,6 @@
+/* Styles for archived project cards */
+.project-group.archived {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+    border: 2px dashed #ccc !important;
+}

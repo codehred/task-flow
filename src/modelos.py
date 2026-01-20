@@ -6,7 +6,7 @@ class Proyecto:
     Clase que representa un proyecto. Usa POO: Encapsulamiento con guion bajo.
     """
 
-    def __init__(self, nombre: str, descripcion: str = "", id: int = None, estado: str = "Activo"):
+    def __init__(self, nombre, descripcion, fecha_inicio=None, estado="Activo", id=None):
         # Atributos internos (encapsulados)
         self._id = id
         self._nombre = nombre

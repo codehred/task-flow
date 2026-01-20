@@ -281,6 +281,35 @@ class DBManager:
         conn.commit()
         conn.close()
         return deleted
+    
+    def buscar_tareas(self, termino_busqueda: str):
+        conn = get_connection()
+        cursor = conn.cursor()
+        # Usamos LOWER para asegurar que encuentre coincidencias sin importar mayúsculas
+        sql = """
+            SELECT * FROM tareas
+            WHERE (LOWER(titulo) LIKE LOWER(?) OR LOWER(descripcion) LIKE LOWER(?))
+            AND estado = 'Pendiente'
+            ORDER BY fecha_limite ASC
+        """
+        parametro = f"%{termino_busqueda}%"
+        cursor.execute(sql, (parametro, parametro))
+        filas = cursor.fetchall()
+        conn.close()
+
+        tareas = []
+        for fila in filas:
+            t = Tarea(
+                titulo=fila['titulo'],
+                fecha_limite=fila['fecha_limite'],
+                prioridad=fila['prioridad'],
+                proyecto_id=fila['proyecto_id'],
+                estado=fila['estado'],
+                descripcion=fila['descripcion'],
+                id=fila['id']
+            )
+            tareas.append(t)
+        return tareas
 
 
 if __name__ == '__main__':

@@ -63,13 +63,14 @@ def eliminar_tarea(tarea_id):
 
 @app.route('/proyecto/nuevo', methods=['GET', 'POST'])
 def crear_proyecto_web():
-    
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         descripcion = request.form.get('descripcion')
+        estado = request.form.get('estado') 
         
-        nuevo_p = Proyecto(nombre=nombre, descripcion=descripcion)
+        nuevo_p = Proyecto(nombre=nombre, descripcion=descripcion, estado=estado)
         db_manager.crear_proyecto(nuevo_p)
+        
         return redirect(url_for('index'))
         
     return render_template('formulario_proyecto.html')
@@ -117,6 +118,22 @@ def editar_proyecto_web(proyecto_id):
 def eliminar_proyecto_web(proyecto_id):
     db_manager.eliminar_proyecto(proyecto_id)
     return redirect(url_for('index'))
+
+@app.route('/buscar')
+def buscar_web():
+    termino = request.args.get('q', '').strip()
+    
+    if not termino:
+        return redirect(url_for('index'))
+    
+    resultados = db_manager.buscar_tareas(termino)
+    
+    proyectos = {p._id: p._nombre for p in db_manager.obtener_proyectos()}
+
+    return render_template('resultados_busqueda.html', 
+                           tareas=resultados, 
+                           termino=termino,
+                           proyectos_nombres=proyectos)
 
 if __name__ == '__main__':
     # Las tablas ya se crean automáticamente en el __init__ de DBManager

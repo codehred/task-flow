@@ -7,3 +7,7 @@ __pycache__/
 
 # Archivos de entorno
 .env
+
+#base de datos
+
+database.db

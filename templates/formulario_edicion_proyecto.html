@@ -2,108 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Tarea</title>
+    <title>Editar Proyecto - TaskFlow</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            background-color: inherit; 
-        }
-        .container {
-            width: 100%;
-            max-width: 700px;
-            margin: 0; 
-        }
-
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        
-        .single-column-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            text-align: left;
-        }
-        .single-column-form input,
-        .single-column-form textarea,
-        .single-column-form select {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            font-size: 1.05rem;
-            margin-bottom: 18px;
-            border: 1px solid #cfcfcf;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        .single-column-form textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        .single-column-form .submit-button {
-            padding: 12px 18px;
-            font-size: 1.05rem;
-            width: auto;
-        }
-        .submit-button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: #007bff;
-            text-decoration: none;
-        }
-    </style>
+    
 </head>
 <body>
     <div class="container">
-        <h1>Editar Proyecto</h1>
+        <h1>✏️ Editar Proyecto</h1>
 
-<form class="single-column-form" method="POST" action="{{ url_for('editar_proyecto_web', proyecto_id=proyecto._id) }}">
-    <label>Nombre:</label>
-    <input type="text" name="nombre" value="{{ proyecto._nombre }}" required>
-    
-    <label>Descripción:</label>
-    <textarea name="descripcion">{{ proyecto._descripcion }}</textarea>
-    
-    <label>Estado:</label>
-    <select name="estado">
-        <option value="Activo" {% if proyecto._estado == 'Activo' %}selected{% endif %}>Activo</option>
-        <option value="Archivado" {% if proyecto._estado == 'Archivado' %}selected{% endif %}>Archivado</option>
-    </select>
-    
-    <button type="submit" class="submit-button">Guardar Cambios</button>
-</form>
-<a href="{{ url_for('index') }}" class="back-link">← Volver al Inicio</a>
+        <div class="form-wrapper">
+            <form class="single-column-form" method="POST" action="{{ url_for('editar_proyecto_web', proyecto_id=proyecto._id) }}">
+                <div class="form-group">
+                    <label for="nombre">📝 Nombre del Proyecto:</label>
+                    <input type="text" id="nombre" name="nombre" value="{{ proyecto._nombre }}" required placeholder="Ej: Desarrollo Web">
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">📄 Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Describe brevemente el proyecto...">{{ proyecto._descripcion }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado">📊 Estado:</label>
+                    <select id="estado" name="estado">
+                        <option value="Activo" {% if proyecto._estado == 'Activo' %}selected{% endif %}>✅ Activo</option>
+                        <option value="Archivado" {% if proyecto._estado == 'Archivado' %}selected{% endif %}>🔒 Archivado</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="submit-button">💾 Guardar Cambios</button>
+                    <a href="{{ url_for('index') }}" class="back-link">
+                        <span>←</span>
+                        <span>Volver al Inicio</span>
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
-
