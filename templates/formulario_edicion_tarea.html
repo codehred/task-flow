@@ -2,36 +2,56 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Proyecto - TaskFlow</title>
+    <title>Editar Tarea - TaskFlow</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  
 </head>
 <body>
     <div class="container">
-        <h1>✏️ Editar Proyecto</h1>
+        <h1>Editar Tarea</h1>
 
         <div class="form-wrapper">
-            <form class="single-column-form" method="POST" action="{{ url_for('editar_proyecto_web', proyecto_id=proyecto._id) }}">
+            <form class="single-column-form" method="POST" action="{{ url_for('editar_tarea_web', tarea_id=tarea._id) }}">
+                
                 <div class="form-group">
-                    <label for="nombre">📝 Nombre del Proyecto:</label>
-                    <input type="text" id="nombre" name="nombre" value="{{ proyecto._nombre }}" required placeholder="Ej: Desarrollo Web">
+                    <label for="titulo">Título de la Tarea:</label>
+                    <input type="text" id="titulo" name="titulo" value="{{ tarea._titulo }}" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="descripcion">📄 Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" placeholder="Describe brevemente el proyecto...">{{ proyecto._descripcion }}</textarea>
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion">{{ tarea._descripcion }}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha_limite">Fecha Límite:</label>
+                        <input type="date" id="fecha_limite" name="fecha_limite" value="{{ tarea._fecha_limite }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prioridad">Prioridad:</label>
+                        <select id="prioridad" name="prioridad" required>
+                            <option value="Baja" {% if tarea._prioridad == 'Baja' %}selected{% endif %}>✓ Baja</option>
+                            <option value="Media" {% if tarea._prioridad == 'Media' %}selected{% endif %}>⚡ Media</option>
+                            <option value="Alta" {% if tarea._prioridad == 'Alta' %}selected{% endif %}>⚠️ Alta</option>
+                            <option value="Urgente" {% if tarea._prioridad == 'Urgente' %}selected{% endif %}>🔥 Urgente</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="estado">📊 Estado:</label>
-                    <select id="estado" name="estado">
-                        <option value="Activo" {% if proyecto._estado == 'Activo' %}selected{% endif %}>✅ Activo</option>
-                        <option value="Archivado" {% if proyecto._estado == 'Archivado' %}selected{% endif %}>🔒 Archivado</option>
+                    <label for="proyecto_id">📁 Proyecto:</label>
+                    <select id="proyecto_id" name="proyecto_id">
+                        {% for p in proyectos %}
+                            <option value="{{ p._id }}" {% if p._id == tarea._proyecto_id %}selected{% endif %}>
+                                {{ p._nombre }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
                 
                 <div class="button-group">
-                    <button type="submit" class="submit-button">💾 Guardar Cambios</button>
+                    <button type="submit" class="submit-button">Guardar Cambios</button>
                     <a href="{{ url_for('index') }}" class="back-link">
                         <span>←</span>
                         <span>Volver al Inicio</span>

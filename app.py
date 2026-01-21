@@ -78,10 +78,14 @@ def crear_proyecto_web():
 @app.route('/tarea/editar/<int:tarea_id>', methods=['GET', 'POST'])
 def editar_tarea_web(tarea_id):
     tarea = db_manager.obtener_tarea_por_id(tarea_id)
-    proyectos = db_manager.obtener_proyectos()
+    todos = db_manager.obtener_proyectos()
+
+    proyectos_validos = [
+        p for p in todos 
+        if p._estado == 'Activo' or p._id == 0 or p._id == tarea._proyecto_id
+    ]
 
     if request.method == 'POST':
-        
         tarea.actualizar_datos(
             titulo=request.form.get('titulo'),
             descripcion=request.form.get('descripcion'),
@@ -91,10 +95,11 @@ def editar_tarea_web(tarea_id):
         )
         
         db_manager.guardar_cambios_tarea(tarea)
-        
         return redirect(url_for('index'))
 
-    return render_template('formulario_edicion_tarea.html', tarea=tarea, proyectos=proyectos)
+    return render_template('formulario_edicion_tarea.html', 
+                           tarea=tarea, 
+                           proyectos=proyectos_validos)
 
 @app.route('/proyecto/editar/<int:proyecto_id>', methods=['GET', 'POST'])
 def editar_proyecto_web(proyecto_id):
@@ -122,18 +127,20 @@ def eliminar_proyecto_web(proyecto_id):
 @app.route('/buscar')
 def buscar_web():
     termino = request.args.get('q', '').strip()
-    
     if not termino:
         return redirect(url_for('index'))
     
-    resultados = db_manager.buscar_tareas(termino)
+    # Recibimos las dos listas
+    tareas, proyectos_encontrados = db_manager.buscar_todo(termino)
     
-    proyectos = {p._id: p._nombre for p in db_manager.obtener_proyectos()}
+    # Diccionario para nombres de proyectos en las tareas
+    nombres_proyectos = {p._id: p._nombre for p in db_manager.obtener_proyectos()}
 
     return render_template('resultados_busqueda.html', 
-                           tareas=resultados, 
+                           tareas=tareas, 
+                           proyectos_resultados=proyectos_encontrados,
                            termino=termino,
-                           proyectos_nombres=proyectos)
+                           proyectos_nombres=nombres_proyectos)
 
 if __name__ == '__main__':
     # Las tablas ya se crean automáticamente en el __init__ de DBManager

@@ -2,62 +2,81 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Nueva Tarea - TaskFlow</title>
+    <title>Resultados de Búsqueda - TaskFlow</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>➕ Crear Nueva Tarea</h1>
+        <div class="search-header">
+            <a href="{{ url_for('index') }}" class="back-link">← Volver al inicio</a>
+            <h1>🔍︎ Resultados para: <span class="search-term">"{{ termino }}"</span></h1>
+        </div>
 
-        <div class="form-wrapper">
-            <form method="POST" action="{{ url_for('crear_tarea_web') }}">
-                <div class="form-group">
-                    <label for="titulo">📝 Título de la Tarea:</label>
-                    <input type="text" id="titulo" name="titulo" required placeholder="Ej: Revisar propuesta de cliente">
-                    <div class="helper-text">Describe brevemente la tarea a realizar</div>
+        <div class="results-info">
+            <span class="results-count">
+                {% set total = tareas|length + (proyectos_resultados|length if proyectos_resultados else 0) %}
+                
+                {% if total == 1 %}
+                    Se encontró <strong>1</strong> coincidencia en total.
+                {% else %}
+                    Se encontraron <strong>{{ total }}</strong> coincidencias en total.
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="projects-wrapper">
+            {% if proyectos_resultados %}
+                <h2 style="padding: 20px 40px 10px; color: #1e293b;">📁 Proyectos Coincidentes</h2>
+                <div class="project-actions" style="padding: 0 40px 20px; display: flex; flex-wrap: wrap; gap: 10px; background: none; border: none;">
+                    {% for p in proyectos_resultados %}
+                        <a href="{{ url_for('editar_proyecto_web', proyecto_id=p._id) }}" class="project-status" style="text-decoration: none; border-color: var(--primary-color); color: var(--primary-color);">
+                            {{ p._nombre }} {% if p._estado == 'Archivado' %}🔒{% endif %}
+                        </a>
+                    {% endfor %}
                 </div>
+                <hr style="border: 0; border-top: 1px solid var(--border-gray); margin: 0 40px;">
+            {% endif %}
 
-                <div class="form-group">
-                    <label for="descripcion">📄 Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" placeholder="Agrega detalles adicionales sobre la tarea..."></textarea>
-                    <div class="helper-text">Opcional: Incluye contexto, pasos o requisitos específicos</div>
+            <h2 style="padding: 20px 40px 10px; color: #1e293b;">📝 Tareas Coincidentes</h2>
+            {% if tareas %}
+                <ul class="task-list">
+                    {% for tarea in tareas %}
+                    <li class="task-item">
+                        <div class="task-info">
+                            <div class="task-title">
+                                {{ tarea._titulo }}
+                                <span class="project-badge">📁 {{ proyectos_nombres.get(tarea._proyecto_id, 'General') }}</span>
+                            </div>
+                            {% if tarea._descripcion %}
+                            <div class="task-description">{{ tarea._descripcion }}</div>
+                            {% endif %}
+                            <div class="task-meta">
+                                <span class="deadline">Límite: {{ tarea._fecha_limite }} | Estado: {{ tarea._estado }}</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            {% if tarea._estado != 'Completada' %}
+                                <a href="{{ url_for('editar_tarea_web', tarea_id=tarea._id) }}" class="btn-edit">Editar</a>
+                            {% else %}
+                                <span class="project-status" style="background: #f1f5f9; color: #64748b; border: none; display: inline-flex;    /* Cambiar a flex para control total */
+                                align-items: center;      
+                                justify-content: center; 
+                                gap: 6px;                
+                                padding: 6px 14px;
+                                line-height: 1;          
+                                vertical-align: middle;">✔ Finalizada</span>
+                            {% endif %}
+
+                            <a href="{{ url_for('eliminar_tarea', tarea_id=tarea._id) }}" class="btn-delete" onclick="return confirm('¿Seguro que deseas eliminar esta tarea?')">Eliminar</a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-state">
+                    <p>No se encontraron tareas con el término <span class="empty-state-term">"{{ termino }}"</span>.</p>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fecha_limite">📅 Fecha Límite:</label>
-                        <input type="date" id="fecha_limite" name="fecha_limite" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="prioridad">⚡ Prioridad:</label>
-                        <select id="prioridad" name="prioridad" required>
-                            <option value="Baja">✓ Baja</option>
-                            <option value="Media" selected>⚡ Media</option>
-                            <option value="Alta">⚠️ Alta</option>
-                            <option value="Urgente">🔥 Urgente</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="proyecto_id">📁 Proyecto:</label>
-                    <select id="proyecto_id" name="proyecto_id">
-                        {% for proyecto in proyectos %}
-                            <option value="{{ proyecto._id }}">{{ proyecto._nombre }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="helper-text">Selecciona a qué proyecto pertenece esta tarea</div>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" class="submit-button">✨ Crear Tarea</button>
-                    <a href="{{ url_for('index') }}" class="back-link">
-                        <span>←</span>
-                        <span>Volver al Listado</span>
-                    </a>
-                </div>
-            </form>
+            {% endif %}
         </div>
     </div>
 </body>
