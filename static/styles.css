@@ -1,9 +1,3 @@
-/* static/styles.css - CSS Centralizado para TaskFlow */
-
-/* ============================================
-   VARIABLES Y ESTILOS BASE
-   ============================================ */
-
 :root {
     --primary-color: #2563eb;
     --primary-dark: #1e40af;
@@ -33,10 +27,6 @@ body {
     color: var(--text-primary);
 }
 
-/* ============================================
-   CONTAINER PRINCIPAL
-   ============================================ */
-
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -46,7 +36,6 @@ body {
     overflow: hidden;
 }
 
-/* Para formularios centrados */
 body.form-page {
     display: flex;
     align-items: center;
@@ -72,7 +61,7 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-/* Header para crear proyecto (gris) */
+/* Header proyecto */
 .header-project {
     background: linear-gradient(135deg, #6c757d, #495057);
 }
@@ -101,9 +90,7 @@ h2 {
     margin: 0;
 }
 
-/* ============================================
-   BÚSQUEDA Y ACCIONES PRINCIPALES
-   ============================================ */
+/*busqueda*/
 
 .search-container,
 .main-actions {
@@ -134,9 +121,7 @@ h2 {
     gap: 10px;
 }
 
-/* ============================================
-   BOTONES Y LINKS
-   ============================================ */
+/* botones y links */
 
 .add-link,
 .action-button {
@@ -152,7 +137,7 @@ h2 {
     text-align: center;
 }
 
-/* Estilos específicos para el formulario de búsqueda */
+/*form busqueda */
 .search-btn {
     padding: 8px 12px;
     font-size: 0.95em;
@@ -191,9 +176,7 @@ h2 {
     margin: 0;
 }
 
-/* ============================================
-   PROYECTOS
-   ============================================ */
+/* proyectos */
 
 .project-section {
     border-bottom: 1px solid var(--border-gray);
@@ -294,9 +277,7 @@ h2 {
     color: var(--text-primary);
 }
 
-/* ============================================
-   TAREAS
-   ============================================ */
+/* tasks */
 
 .task-list {
     list-style: none;
@@ -352,7 +333,7 @@ h2 {
     gap: 4px;
 }
 
-/* Badges de prioridad */
+/* prioridad */
 .priority-badge {
     display: inline-block;
     padding: 4px 10px;
@@ -378,7 +359,7 @@ h2 {
     color: #059669;
 }
 
-/* Acciones de tareas */
+/* acciones de tareas */
 .task-actions {
     display: flex;
     gap: 8px;
@@ -427,9 +408,7 @@ h2 {
     transform: translateY(-1px);
 }
 
-/* ============================================
-   FORMULARIOS
-   ============================================ */
+/* forms */
 
 .form-wrapper {
     padding: 40px;
@@ -499,7 +478,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
 }
 
-/* Grid para campos en fila */
+/* grid */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -512,7 +491,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     margin-top: 4px;
 }
 
-/* Botones de formulario */
+/* botones forms */
 .button-group {
     display: flex;
     gap: 12px;
@@ -544,7 +523,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform: translateY(0);
 }
 
-/* Botón verde para crear */
+/* btn crear */
 .submit-button.create {
     background: linear-gradient(135deg, var(--success-color), #059669);
 }
@@ -573,24 +552,28 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border-color: var(--text-secondary);
 }
 
-/* Back link en header de búsqueda */
+/* back link busqueda */
 .search-header .back-link {
-    color: white;
-    border: none;
-    opacity: 0.9;
-    margin-bottom: 16px;
-    min-width: auto;
-    padding: 0;
+    background: transparent !important; 
+    border: none !important;            
+    color: rgba(255, 255, 255, 0.9) !important; 
+    padding: 0 !important;              
+    box-shadow: none !important;        
+    min-width: auto !important;         
+    font-size: 0.95em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .search-header .back-link:hover {
-    opacity: 1;
-    background: transparent;
+    background: transparent !important; 
+    color: white !important;             
+    text-decoration: underline;          
 }
 
-/* ============================================
-   BÚSQUEDA - RESULTADOS
-   ============================================ */
+/* busqueda y resultados */
 
 .search-term {
     background: rgba(255, 255, 255, 0.2);
@@ -628,9 +611,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border: 1px solid var(--border-gray);
 }
 
-/* ============================================
-   ESTADO VACÍO
-   ============================================ */
+/* empty from tasks */
 
 .empty-state {
     padding: 60px 40px;
@@ -664,9 +645,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     color: var(--text-primary);
 }
 
-/* ============================================
-   ANIMACIONES
-   ============================================ */
+/* animaciones */
 
 @keyframes slideIn {
     from {
@@ -704,9 +683,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .task-item:nth-child(4) { animation-delay: 0.2s; }
 .task-item:nth-child(5) { animation-delay: 0.25s; }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* responsive al cursor */
 
 @media (max-width: 768px) {
     body {
