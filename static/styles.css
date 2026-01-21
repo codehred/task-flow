@@ -277,6 +277,30 @@ h2 {
     color: var(--text-primary);
 }
 
+.btn-edit-project {
+    background: white !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-gray) !important;
+}
+
+.btn-edit-project:hover {
+    background: var(--border-gray) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-1px);
+}
+
+.btn-delete-project {
+    background: var(--danger-color) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-delete-project:hover {
+    background: #8c1d1d !important;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
 /* tasks */
 
 .task-list {
@@ -333,7 +357,7 @@ h2 {
     gap: 4px;
 }
 
-/* prioridad */
+/* badges prioridad */
 .priority-badge {
     display: inline-block;
     padding: 4px 10px;
@@ -342,6 +366,12 @@ h2 {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.priority-badge.urgent {
+    background: #fef2f2;
+    color: #b91c1c; 
+    border: 1px solid #fecaca;
 }
 
 .priority-badge.high {
@@ -404,7 +434,7 @@ h2 {
 }
 
 .btn-delete:hover {
-    background: #dc2626;
+    background: #8c1d1d;
     transform: translateY(-1px);
 }
 

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from src.database import DBManager
 from src.modelos import Tarea, Proyecto
+from urllib.parse import urlparse, parse_qs
 
 
 app = Flask(__name__)
@@ -55,9 +56,17 @@ def completar_tarea(tarea_id):
 
 @app.route('/eliminar/<int:tarea_id>')
 def eliminar_tarea(tarea_id):
-   
+    referrer = request.referrer
+    
     db_manager.eliminar_tarea(tarea_id)
     
+    if referrer and '/buscar' in referrer:
+        parsed_url = urlparse(referrer)
+        query_params = parse_qs(parsed_url.query)
+        termino = query_params.get('q', [''])[0]
+        
+        if termino:
+            return redirect(url_for('buscar_web', q=termino))
 
     return redirect(url_for('index'))
 

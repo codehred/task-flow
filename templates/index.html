@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>TaskFlow - Tareas Pendientes</title>
+    <title>TaskFlow - Gestor de Tareas y Proyectos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
@@ -62,12 +62,12 @@
 
                     {% if proyecto._id != 0 %}
                     <div class="project-actions">
-                        <a href="{{ url_for('editar_proyecto_web', proyecto_id=proyecto._id) }}">
+                        <a href="{{ url_for('editar_proyecto_web', proyecto_id=proyecto._id) }}" class="btn-edit-project">
                             ✏️ Editar/Reactivar
                         </a>
                         <a href="{{ url_for('eliminar_proyecto_web', proyecto_id=proyecto._id) }}"
-                           onclick="return confirm('¿Seguro que deseas eliminar este proyecto y todas sus tareas?')"
-                           style="background-color: #dc3545; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; border: none;">
+                           class="btn-delete-project"
+                           onclick="return confirm('¿Seguro que deseas eliminar este proyecto y todas sus tareas?')">
                             🗑️ Eliminar
                         </a>
                     </div>
@@ -82,15 +82,17 @@
                                     <div class="task-info">
                                         
                                         <div class="task-title">
-                                            {{ tarea._titulo }}
-                                            {% if tarea._prioridad == 'Alta' %}
-                                                <span class="priority-badge high">⚠️ Alta</span>
-                                            {% elif tarea._prioridad == 'Media' %}
-                                                <span class="priority-badge medium">⚡ Media</span>
-                                            {% else %}
-                                                <span class="priority-badge low">✓ Baja</span>
-                                            {% endif %}
-                                        </div>
+                                        {{ tarea._titulo }}
+                                        {% if tarea._prioridad == 'Urgente' %}
+                                            <span class="priority-badge urgent">🔥 Urgente</span>
+                                        {% elif tarea._prioridad == 'Alta' %}
+                                            <span class="priority-badge high">⚠️ Alta</span>
+                                        {% elif tarea._prioridad == 'Media' %}
+                                            <span class="priority-badge medium">⚡ Media</span>
+                                        {% else %}
+                                            <span class="priority-badge low">✓ Baja</span>
+                                        {% endif %}
+                                    </div>
 
                                         {% if tarea._descripcion %}
                                         <div class="task-description">
