@@ -282,34 +282,33 @@ class DBManager:
         conn.close()
         return deleted
     
-    def buscar_tareas(self, termino_busqueda: str):
+    def buscar_todo(self, termino_busqueda: str):
         conn = get_connection()
         cursor = conn.cursor()
-        # Usamos LOWER para asegurar que encuentre coincidencias sin importar mayúsculas
-        sql = """
-            SELECT * FROM tareas
-            WHERE (LOWER(titulo) LIKE LOWER(?) OR LOWER(descripcion) LIKE LOWER(?))
-            AND estado = 'Pendiente'
-            ORDER BY fecha_limite ASC
-        """
-        parametro = f"%{termino_busqueda}%"
-        cursor.execute(sql, (parametro, parametro))
-        filas = cursor.fetchall()
+        termino = f"%{termino_busqueda}%"
+
+        cursor.execute("""
+            SELECT * FROM tareas 
+            WHERE LOWER(titulo) LIKE LOWER(?) OR LOWER(descripcion) LIKE LOWER(?)
+        """, (termino, termino))
+        tareas_filas = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT * FROM proyectos 
+            WHERE LOWER(nombre) LIKE LOWER(?) OR LOWER(descripcion) LIKE LOWER(?)
+        """, (termino, termino))
+        proyectos_filas = cursor.fetchall()
+        
         conn.close()
 
-        tareas = []
-        for fila in filas:
-            t = Tarea(
-                titulo=fila['titulo'],
-                fecha_limite=fila['fecha_limite'],
-                prioridad=fila['prioridad'],
-                proyecto_id=fila['proyecto_id'],
-                estado=fila['estado'],
-                descripcion=fila['descripcion'],
-                id=fila['id']
-            )
-            tareas.append(t)
-        return tareas
+        tareas = [Tarea(titulo=f['titulo'], fecha_limite=f['fecha_limite'], prioridad=f['prioridad'], 
+                        proyecto_id=f['proyecto_id'], estado=f['estado'], descripcion=f['descripcion'], id=f['id']) 
+                for f in tareas_filas]
+                
+        proyectos = [Proyecto(nombre=f['nombre'], descripcion=f['descripcion'], id=f['id'], estado=f['estado']) 
+                    for f in proyectos_filas]
+
+        return tareas, proyectos
 
 
 if __name__ == '__main__':
